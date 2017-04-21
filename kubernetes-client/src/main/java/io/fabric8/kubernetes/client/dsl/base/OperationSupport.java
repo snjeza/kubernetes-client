@@ -284,7 +284,7 @@ public class OperationSupport {
 
 
   public static Status createStatus(Response response) {
-    int statusCode = response.code();
+    int statusCode = response == null ? -1 : response.code();
     String statusMessage = "";
     ResponseBody body = response != null ? response.body() : null;
     try {
@@ -304,6 +304,10 @@ public class OperationSupport {
       return createStatus(statusCode, statusMessage);
     } catch (IOException e) {
       return createStatus(statusCode, statusMessage);
+    } finally {
+      if (body != null) {
+        body.close();
+      }
     }
   }
 

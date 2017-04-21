@@ -56,7 +56,9 @@ public class LogWatchCallback implements LogWatch, Callback, AutoCloseable {
 
     @Override
     public void close() {
+    if (pumper != null) {
         pumper.close();
+    }
         executorService.shutdown();
         try {
             if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {

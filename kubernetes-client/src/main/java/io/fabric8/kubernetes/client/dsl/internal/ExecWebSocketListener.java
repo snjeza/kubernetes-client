@@ -157,6 +157,9 @@ public class ExecWebSocketListener extends WebSocketListener implements ExecWatc
             if (listener != null) {
                 listener.onOpen(response);
             }
+            if (response != null && response.body() != null) {
+                response.body().close();
+            }
         }
     }
 
@@ -169,11 +172,14 @@ public class ExecWebSocketListener extends WebSocketListener implements ExecWatc
         if (!started.get()) {
           queue.add(new KubernetesClientException(status));
         }
-        closeExecutor();
       } finally {
         if (listener != null) {
           listener.onFailure(t, response);
         }
+        if (response != null && response.body() != null) {
+            response.body().close();
+        }
+        close();
       }
     }
 
